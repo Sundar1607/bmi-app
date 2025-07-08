@@ -1,13 +1,15 @@
 version: '3'
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "8080:80"
-    depends_on:
-      - backend
-
   backend:
     build: ./backend
+    container_name: bmi-backend
     ports:
       - "5000:5000"
+
+  frontend:
+    build: ./frontend
+    container_name: bmi-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
