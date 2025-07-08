@@ -1,27 +1,54 @@
 pipeline {
   agent any
 
+  environment {
+    COMPOSE_PROJECT_NAME = "bmi_app"
+    GIT_REPO = "https://github.com/Sundar1607/bmi-app.git" // <-- Replace if different
+  }
+
   stages {
-    stage('Clone') {
+    stage('Clone Repository') {
       steps {
-        git 'https://github.com/Sundar1607/bmi-app.git'
+        // This uses Jenkins Git plugin to pull repo
+        git branch: 'main', url: "${GIT_REPO}"
       }
     }
 
-    stage('Build Docker Images') {
+stage('Build Backend') {
       steps {
-        script {
-          sh 'docker-compose build'
+        dir('backend') {
+          sh 'docker build -t bmi-backend .'
         }
       }
     }
 
-    stage('Deploy Containers') {
+    stage('Build Frontend') {
       steps {
-        script {
-          sh 'docker-compose up -d'
+        dir('frontend') {
+          sh 'docker build -t bmi-frontend .'
         }
+      }
+    }
+
+    stage('Deploy App') {
+      steps {
+        sh 'docker-compose up -d --build'
+      }
+    }
+
+    stage('Verify') {
+      steps {
+        sh 'docker ps'
       }
     }
   }
-}
+
+  post {
+    success {
+      echo '✅ BMI App Deployed Successfully!'
+    }
+    failure {
+      echo '❌ Deployment Failed.'
+    }
+  }
+} 
