@@ -17,7 +17,6 @@ function App() {
     const data = await res.json();
     setBmi(data.bmi);
 
-    // Set BMI category
     if (data.bmi < 18.5) setStatus('Underweight');
     else if (data.bmi < 25) setStatus('Normal');
     else if (data.bmi < 30) setStatus('Overweight');
@@ -25,7 +24,19 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div
+      className="App"
+      style={{
+        backgroundImage: "url('/health-bg.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white'
+      }}
+    >
       <div className="container">
         <h1><FaHeartbeat /> Health BMI Calculator</h1>
 
